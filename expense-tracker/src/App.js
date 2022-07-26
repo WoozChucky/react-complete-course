@@ -1,4 +1,6 @@
 import Expenses from "./components/Expenses/Expenses";
+import NewExpense from "./components/NewExpense/NewExpense";
+import {useState} from "react";
 
 // eslint-disable-next-line no-extend-native
 Object.defineProperty(String.prototype, 'capitalize', {
@@ -32,10 +34,22 @@ const App = () => {
         },
     ];
 
+    const [currentExpenses, setCurrentExpenses] = useState(expenses);
+
+    const onExpenseAddedHandler = (expense) => {
+
+        // setCurrentExpenses([expense, ...currentExpenses]);
+
+        setCurrentExpenses(prevState => { // safer to keep old snapshot of data
+            return [expense, ...prevState];
+        });
+
+    }
+
     return (
         <div>
-            <h2>Let's get started!</h2>
-            <Expenses items={expenses}/>
+            <NewExpense onExpenseAdded={onExpenseAddedHandler} />
+            <Expenses items={currentExpenses}/>
         </div>
     );
 }
