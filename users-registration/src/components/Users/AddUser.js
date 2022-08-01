@@ -1,18 +1,66 @@
+import Card from "../UI/Card";
+
+import style from './AddUser.module.css';
+import Button from "../UI/Button";
+import {useState} from "react";
+import ErrorModal from "../UI/ErrorModal";
 
 export default function AddUser(props) {
 
+    const [username, setUsername] = useState('');
+    const [age, setAge] = useState('');
+    const [hasError, setHasError] = useState(false);
+
     function addUserHandler(event) {
         event.preventDefault();
+        if (username.trim().length === 0 || age.trim().length === 0 || +age < 1) {
+            setHasError(true);
+            return;
+        }
+
+        console.log(username + ' ' + age);
+        setUsername('');
+        setAge('');
+
+        props.onAddedUser({
+           name: username,
+           age: age
+        });
     }
 
+    const usernameChangeHandler = (event) => {
+        setUsername(prevState => {
+            if (prevState !== event.target.value)
+                return event.target.value;
+            return prevState;
+        })
+    };
+
+    const ageChangeHandler = (event) => {
+        setAge(prevState => {
+            if (prevState !== event.target.value)
+                return event.target.value;
+            return prevState;
+        })
+    };
+
+    const onOkClickHandler = event => {
+        setHasError(false);
+    };
+
     return (
-        <form onSubmit={addUserHandler}>
-            <label htmlFor="username">Username</label>
-            <input id="username" type="text"/>
-            <label htmlFor="age">Age (years)</label>
-            <input id="age" type="number" step="1"/>
-            <button type="submit">Add User</button>
-        </form>
+        <div>
+            {hasError ? <ErrorModal title='Error occurred' content='Something went wrong' onOkayClick={onOkClickHandler} /> : ''}
+            <Card className={style.input}>
+                <form onSubmit={addUserHandler}>
+                    <label htmlFor="username">Username</label>
+                    <input id="username" type="text" value={username} onChange={usernameChangeHandler} />
+                    <label htmlFor="age">Age (years)</label>
+                    <input id="age" type="number" step="1" value={age} onChange={ageChangeHandler} />
+                    <Button type='submit' onClick={() => {}}>Add User</Button>
+                </form>
+            </Card>
+        </div>
     );
 
 }
