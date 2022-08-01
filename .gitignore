@@ -23,5 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 /course-goals/node_modules/
 /expense-tracker/node_modules/
+/*/node_modules/
 
 .idea/
+/users-registration/node_modules/
